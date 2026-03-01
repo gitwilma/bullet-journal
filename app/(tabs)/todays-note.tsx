@@ -72,6 +72,20 @@ export default function TodaysNoteScreen() {
 
         <View style={{ height: spacing.xl }} />
 
+        {/* Dagens datum */}
+        <Text
+          style={[
+            textStyles.body,
+            { textAlign: "left", marginBottom: spacing.xs },
+          ]}
+        >
+          {new Date().toLocaleDateString("en-EN", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </Text>
+
         <Text style={textStyles.h1}>Today&apos;s note</Text>
 
         <View style={{ height: spacing.md }} />

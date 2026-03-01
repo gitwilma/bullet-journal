@@ -13,7 +13,6 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.content}>
-        {/* Title */}
         <Text style={[textStyles.h3, styles.title]}>Good, you're here again</Text>
         <View style={styles.row}>
           <Text style={styles.prompt}>
