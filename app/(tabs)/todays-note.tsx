@@ -1,3 +1,10 @@
+import { MOODS, MoodId } from "@/constants/moods";
+import { colors } from "@/theme/colors";
+import { spacing } from "@/theme/spacing";
+import { textStyles } from "@/theme/textStyles";
+import { MoodButton } from "@/ui/MoodButton";
+import { NoteType, NoteTypePicker } from "@/ui/NoteTypePicker";
+import { PrimaryButton } from "@/ui/PrimaryButton";
 import { useMemo, useState } from "react";
 import {
   Alert,
@@ -9,13 +16,7 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { colors } from "@/theme/colors";
-import { spacing } from "@/theme/spacing";
-import { textStyles } from "@/theme/textStyles";
-import { MOODS, MoodId } from "@/constants/moods";
-import { MoodButton } from "@/ui/MoodButton";
-import { NoteType, NoteTypePicker } from "@/ui/NoteTypePicker";
-import { PrimaryButton } from "@/ui/PrimaryButton";
+import { saveTodaysNote } from "../utils/storage";
 
 export default function TodaysNoteScreen() {
   const [mood, setMood] = useState<MoodId | null>(null);
@@ -44,11 +45,22 @@ export default function TodaysNoteScreen() {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Today's feeling */}
-        <Text style={[textStyles.h3, styles.centerTitle]}>Today&apos;s feeling</Text>
+        <Text style={[textStyles.h3, styles.centerTitle]}>
+          Today&apos;s feeling
+        </Text>
 
-        <View style={styles.moodsGrid}>
-          {MOODS.map((m) => (
+        <View style={styles.moodsGridRow}>
+          {MOODS.slice(0, 3).map((m) => (
+            <MoodButton
+              key={m.id}
+              image={m.image}
+              selected={mood === m.id}
+              onPress={() => setMood(m.id)}
+            />
+          ))}
+        </View>
+        <View style={styles.moodsGridRow}>
+          {MOODS.slice(3, 7).map((m) => (
             <MoodButton
               key={m.id}
               image={m.image}
@@ -58,7 +70,6 @@ export default function TodaysNoteScreen() {
           ))}
         </View>
 
-        {/* Today's note */}
         <View style={{ height: spacing.xl }} />
 
         <Text style={textStyles.h1}>Today&apos;s note</Text>
@@ -81,18 +92,31 @@ export default function TodaysNoteScreen() {
           />
         </View>
 
-        {/* Save (ingen backend än) */}
         <View style={{ height: spacing.lg }} />
         <View style={styles.saveRow}>
           <Text style={styles.saveHint}>
             <PrimaryButton
               label="Save"
               disabled={!mood && text.trim().length === 0}
-              onPress={() => {
-              Alert.alert("Saved (local)", "We’ll connect this to the database later.");
-          }}
-        />
-
+              onPress={async () => {
+                const today = new Date();
+                const date = today.toISOString().slice(0, 10);
+                try {
+                  await saveTodaysNote({
+                    date,
+                    mood,
+                    noteType,
+                    text: text.trim(),
+                  });
+                  Alert.alert("Sparat!", "Dagens anteckning är sparad.");
+                  setText("");
+                  setMood(null);
+                  setNoteType("planning");
+                } catch (e) {
+                  Alert.alert("Fel", "Kunde inte spara anteckningen.");
+                }
+              }}
+            />
           </Text>
         </View>
       </ScrollView>
@@ -114,11 +138,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: spacing.lg,
   },
-  moodsGrid: {
+  moodsGridRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
     justifyContent: "center",
-    gap: spacing.lg,
+    marginBottom: spacing.md,
+    gap: spacing.sm,
   },
   inputCard: {
     minHeight: 280,

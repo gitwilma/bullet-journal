@@ -15,7 +15,7 @@ export default function RootLayout() {
   });
 
   if (!fontsLoaded) {
-    return <View />; // eller splash senare
+    return <View />;
   }
 
   return <Stack screenOptions={{ headerShown: false }} />;

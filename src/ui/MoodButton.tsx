@@ -1,6 +1,6 @@
-import { Image, Pressable, StyleSheet, View } from "react-native";
-import * as Haptics from "expo-haptics";
 import { colors } from "@/theme/colors";
+import * as Haptics from "expo-haptics";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 
 type Props = {
   image: any;
@@ -9,7 +9,12 @@ type Props = {
   accessibilityLabel?: string;
 };
 
-export function MoodButton({ image, selected, onPress, accessibilityLabel }: Props) {
+export function MoodButton({
+  image,
+  selected,
+  onPress,
+  accessibilityLabel,
+}: Props) {
   return (
     <Pressable
       onPress={() => {
@@ -30,7 +35,7 @@ export function MoodButton({ image, selected, onPress, accessibilityLabel }: Pro
   );
 }
 
-const SIZE = 74;
+const SIZE = 80;
 
 const styles = StyleSheet.create({
   pressable: {
@@ -40,10 +45,6 @@ const styles = StyleSheet.create({
     width: SIZE,
     height: SIZE,
     borderRadius: SIZE / 2,
-    shadowColor: colors.shadow,
-    shadowOpacity: 0.22,
-    shadowRadius: 0,
-    shadowOffset: { width: 0, height: 6 },
     elevation: 6,
   },
   image: {
@@ -51,8 +52,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   selected: {
-    // om du vill markera vald:
-    // borderWidth: 2,
-    // borderColor: colors.text,
+    borderWidth: 3,
+    borderColor: colors.text,
   },
 });

@@ -1,5 +1,5 @@
 export const colors = {
-  bg: "#F6F1EA",       // din varma beige
+  bg: "#F5F4F1",       // din varma beige
   text: "#111111",
   mutedText: "#6B6B6B",
   card: "#FFFFFF",
